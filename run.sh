@@ -1,8 +1,19 @@
-#!/bash/bin
+#!/bin/bash
 
-gcc main.c SHA_256 AES DES RSA -o crypto  #or use clang
+gcc main.c SHA_256.c AES.c DES.c RSA.c -o crypto #or use clang
 
-for ((i=0;i<5;i++))
+if [ $? -ne 0 ]; then
+    echo "Compilation failed"
+    exit 1
+fi
+
+echo "Compilation successful. Running tests..."
+
+# proper mapping (index must match C switch cases)
+algos=("SHA-256" "AES" "DES" "RSA")
+
+for i in "${!algos[@]}"
 do
-./crypto i test.txt 
+    echo "Running ${algos[$i]}..."
+    ./crypto "$i" test.txt
 done
